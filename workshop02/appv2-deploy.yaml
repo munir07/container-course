@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: app-deploy
+  namespace: myspace
+  labels:
+    name: app-deploy
+
+spec:
+  # NUMBER OF INSTANCES
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      name: myapp-pod
+  template:
+    #THE POD TO BE DEPLOYED
+    metadata:
+      name: myapp-pod
+      labels:
+        name: myapp-pod
+
+    spec:
+      containers:
+      - name: myapp-container
+        image: stackupiss/northwind-app:v2
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3000
+        env:
+        - name: DB_HOST
+          value: mydb-svc.myspace.svc.cluster.local
+        - name: INSTANCE_IP_ADDRESS
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        resources:
+          requests:
+            cpu: "100m"
