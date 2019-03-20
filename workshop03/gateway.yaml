@@ -1,0 +1,15 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: openweather-ingress
+  namespace: default
+spec:
+  selector:
+    istio: ingressgateway #controller
+  servers:
+  - hosts:
+    - openweather.68.183.247.98.nip.io
+    port:
+      number: 80
+      protocol: HTTP
+      name: HTTP

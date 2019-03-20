@@ -1,0 +1,80 @@
+--- Apply the Deployment
+
+    kubectl apply -f deployment.yaml
+
+--- Check the 2 replicas running.
+
+[workshop03]$ kubectl get pods
+NAME                                     READY   STATUS    RESTARTS   AGE
+dweatherapp-deployment-5bbfd69494-9kbgt   1/1     Running   0          99s
+weatherapp-deployment-5bbfd69494-lv5bl   1/1     Running   0          99s
+[workshop03]$
+
+--- Apply the Service
+
+[workshop03]$ kubectl apply -f service.yaml
+service/weatherappsvc created
+[workshop03]$
+
+--- Check Service is running with External IP Address
+
+[workshop03]$ kubectl get svc
+NAME               TYPE           CLUSTER-IP       EXTERNAL-IP      PORT(S)        AGE
+weatherappsvc      LoadBalancer   10.245.221.62    68.183.247.112   80:31297/TCP   93s
+[workshop03]$
+
+--- Take note external IP is 68.183.247.112
+
+--- Check if u can see the app by keying the IP on a browser
+
+--- Delete the deployment and redo deployment with sidecar
+
+[workshop03]$ kubectl delete -f deployment.yaml
+deployment.extensions "weatherapp-deployment" deleted
+[workshop03]$ istioctl kube-inject -f deployment.yaml > deployment-with-sidecar.yaml
+[workshop03]$ kubectl apply -f deployment-with-sidecar.yaml
+deployment.extensions/weatherapp-deployment created
+[workshop03]$
+
+[workshop03]$ kubectl get pods
+NAME                                    READY   STATUS    RESTARTS   AGE
+weatherapp-deployment-cf74c89ff-49l58   2/2     Running   0          62s
+weatherapp-deployment-cf74c89ff-rp5c4   2/2     Running   0          62s
+[workshop03]$
+
+--- Apply Service Entry for Egress to Open Weather Map
+
+[workshop03]$ kubectl apply -f service-entry.yaml
+serviceentry.networking.istio.io/openweather-svc-entry created
+[workshop03]$
+
+--- Remove LoadBalancer and change it to ClusterIP then reapply service.yaml
+
+[workshop03]$ kubectl delete -f service.yaml
+service "weatherappsvc" deleted
+[workshop03]$ kubectl apply -f service.yaml
+service/weatherappsvc created
+[workshop03]$ kubectl get svc
+NAME               TYPE           CLUSTER-IP       EXTERNAL-IP      PORT(S)        AGE
+weatherappsvc      ClusterIP      10.245.71.251    <none>           80/TCP         23s
+[workshop03]$
+
+-- Get the ingress gateway External IP
+
+[workshop03]$ kubectl get svc -n istio-system | grep ingress
+istio-ingressgateway     LoadBalancer   10.245.204.121   68.183.247.98   80:31380/TCP,443:31390/TCP,31400:31400/TCP,15011:32117/TCP,8060:30928/TCP,853:32618/TCP,15030:30547/TCP,15031:30630/TCP   171m
+[workshop03]$
+
+--- Take note that IP is 68.183.247.98
+
+--- Update gateway and virtual service yaml files and apply them
+
+[workshop03]$ kubectl apply -f gateway.yaml
+gateway.networking.istio.io/openweather-ingress created
+[workshop03]$ kubectl apply -f virtualservice.yaml
+virtualservice.networking.istio.io/openweatherappvs1 created
+[workshop03]$
+
+--- See if the ingress is working good by entering http://openweather.68.183.247.98.nip.io on the browser
+
+
