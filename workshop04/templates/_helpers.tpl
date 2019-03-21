@@ -30,3 +30,14 @@ Create chart name and version as used by the chart label.
 {{- define "weatherapp.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
+
+{{/*
+Select Replica Count depending on development or production
+*/}}
+{{- define "weatherapp.replicaCount" -}}
+{{- if .Values.productionEnv -}}
+{{- .Values.productionReplicaCount -}}
+{{- else -}}
+{{- .Values.replicaCount -}}
+{{- end -}}
+{{- end -}}

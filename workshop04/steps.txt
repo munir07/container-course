@@ -51,3 +51,16 @@ Handling connection for 8080
 Handling connection for 8080
 
 -- Step 5 : go to http://localhost:8080
+
+
+-- Step 6 : if make any changes, use the following command to upgrade
+
+  helm upgrade myapp .
+
+You should see the following
+
+[container-course]$ helm history myapp
+REVISION	UPDATED                 	STATUS    	CHART           	DESCRIPTION
+1       	Thu Mar 21 13:39:00 2019	SUPERSEDED	weatherapp-0.1.0	Install complete
+2       	Thu Mar 21 13:48:31 2019	DEPLOYED  	weatherapp-0.1.1	Upgrade complete
+[container-course]$

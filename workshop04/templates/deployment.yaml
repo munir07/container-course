@@ -9,7 +9,7 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     version: {{ .Values.version }}
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ include "weatherapp.replicaCount" . }}
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "weatherapp.name" . }}
