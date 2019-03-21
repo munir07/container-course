@@ -20,6 +20,12 @@ param:
   appkey: 3af4185f06b6f8d839b72273c3d006f4
   defaultCity: ""
 
+gatewayhostname: "jp.x.x.x.x.nip.io"
+gatewayport: 80
+
+
 replicaCount: 1
 productionEnv: false
 productionReplicaCount: 2
+
+
