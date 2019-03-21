@@ -1,0 +1,53 @@
+-- Step 1 : Install with helm
+
+[workshop04]$ helm install . --name myapp
+NAME:   myapp
+LAST DEPLOYED: Thu Mar 21 13:14:24 2019
+NAMESPACE: default
+STATUS: DEPLOYED
+
+RESOURCES:
+==> v1/Deployment
+NAME              READY  UP-TO-DATE  AVAILABLE  AGE
+myapp-weatherapp  0/1    1           0          1s
+
+==> v1/Pod(related)
+NAME                               READY  STATUS             RESTARTS  AGE
+myapp-weatherapp-5fd79bd7b7-5h6nt  0/1    ContainerCreating  0         1s
+
+==> v1/Service
+NAME              TYPE       CLUSTER-IP     EXTERNAL-IP  PORT(S)  AGE
+myapp-weatherapp  ClusterIP  10.245.18.149  <none>       80/TCP   1s
+
+
+NOTES:
+1. Get the application URL by running these commands:
+  export POD_NAME=$(kubectl get pods --namespace default -l "app.kubernetes.io/name=weatherapp,app.kubernetes.io/instance=myapp" -o jsonpath="{.items[0].metadata.name}")
+  echo "Visit http://127.0.0.1:8080 to use your application"
+  kubectl port-forward $POD_NAME 8080:3000
+[workshop04]$
+
+-- Step 2 : Ensure help is DEPLOYED
+[workshop04]$ helm ls
+NAME 	REVISION	UPDATED                 	STATUS  	CHART           	APP VERSION	NAMESPACE
+myapp	1       	Thu Mar 21 13:14:24 2019	DEPLOYED	weatherapp-0.1.0	1.0        	default
+[workshop04]$
+
+-- Step 3 : Ensure pod is Running
+
+[workshop04]$ kubectl get pods
+NAME                                READY   STATUS    RESTARTS   AGE
+myapp-weatherapp-5fd79bd7b7-5h6nt   1/1     Running   0          11s
+[workshop04]$
+
+-- Step 4 : Do port forwarding
+
+[workshop04]$ kubectl port-forward myapp-weatherapp-5fd79bd7b7-5h6nt 8080:3000
+Forwarding from 127.0.0.1:8080 -> 3000
+Forwarding from [::1]:8080 -> 3000
+Handling connection for 8080
+Handling connection for 8080
+Handling connection for 8080
+Handling connection for 8080
+
+-- Step 5 : go to http://localhost:8080
