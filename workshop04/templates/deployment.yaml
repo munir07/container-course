@@ -30,7 +30,7 @@ spec:
             - name: APP_ID
               value: {{ .Values.param.appkey }}
             - name: APP_DEFAULT_CITY
-              value: {{ .Values.param.defaultCity }}
+              value: {{ default "Singapore" .Values.param.defaultCity }}
           ports:
             - name: http
               containerPort: {{ .Values.deployment.containerPort }}

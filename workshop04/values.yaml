@@ -18,7 +18,7 @@ deployment:
 
 param:
   appkey: 3af4185f06b6f8d839b72273c3d006f4
-  defaultCity: Singapore
+  defaultCity: ""
 
 replicaCount: 1
 productionEnv: false
